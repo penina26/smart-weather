@@ -14,7 +14,7 @@ function Navbar() {
   return (
     <header className="flex items-center justify-between px-8 py-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors duration-300">
       <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
-        Atmosphere
+        <Link to="/">Atmosphere</Link>
       </div>
       <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
         <Link to="/" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
