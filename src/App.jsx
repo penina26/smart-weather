@@ -10,8 +10,7 @@ import SignUpPage from './pages/SignUpPage';
 export default function App() {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <AuthProvider>
-        <BrowserRouter>         
+      <AuthProvider>       
           <Toaster 
             position="top-center"
             toastOptions={{
@@ -29,7 +28,6 @@ export default function App() {
               <Route path="/signup" element={<SignUpPage />} />
             </Route>
           </Routes>
-        </BrowserRouter>
       </AuthProvider>
     </GoogleOAuthProvider>
   );
