@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGeocoding }      from "../hooks/useGeocoding";
-import { useWeatherContext } from "../context/WeatherContext";
+import { useWeatherContext } from "../contexts/WeatherContext";
 
 export default function SearchBar() {
   const { setCity }                      = useWeatherContext();

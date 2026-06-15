@@ -10,7 +10,7 @@ import Bookmarks from './pages/Bookmarks';
 import DetailedForecast from './pages/Detailedforecast';
 import Home from './pages/Home';
 import SearchBar from './components/SearchBar';
-import { WeatherProvider, weatherProvider } from './contexts/WeatherContext';
+import { WeatherProvider } from './contexts/WeatherContext';
 
 export default function App() {
   return (
@@ -35,6 +35,9 @@ export default function App() {
               <Route path="/forecast/:id" element={<DetailedForecast />} />
             </Route>
           </Routes>
+          <WeatherProvider>
+            <SearchBar />
+          </WeatherProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );
