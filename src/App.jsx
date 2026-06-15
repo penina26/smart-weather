@@ -9,6 +9,8 @@ import SignUpPage from './pages/SignUpPage';
 import Bookmarks from './pages/Bookmarks';
 import DetailedForecast from './pages/Detailedforecast';
 import Home from './pages/Home';
+import SearchBar from './components/SearchBar';
+import { WeatherProvider, weatherProvider } from './contexts/WeatherContext';
 
 export default function App() {
   return (

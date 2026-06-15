@@ -23,7 +23,6 @@ function Navbar() {
         <Link to="/bookmarks" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
           Bookmarks
         </Link>
-        
         {/* Dynamic Authentication Rendering */}
         {user ? (
           <div className="flex items-center space-x-4 ml-2 pl-6 border-l border-slate-200 dark:border-slate-700">
