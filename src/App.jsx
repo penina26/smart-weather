@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Layout from './Layout';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import Home from './pages/Home';
 
 export default function App() {
   return (
@@ -23,7 +24,7 @@ export default function App() {
           />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/login" />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
             </Route>
