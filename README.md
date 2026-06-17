@@ -26,3 +26,10 @@ Traditional weather platforms present technical data (temperature, humidity, rai
 2. **Data Fetching:** The system retrieves real-time weather data via API.
 3. **Smart Analysis:** The raw data is analyzed and converted into tailored recommendations.
 4. **Actionable Insights:** The dashboard displays clear, practical advice for the user to act upon.
+
+## Developers
+1. **David Mugambi:** Group lead and coordinator. Also worked on rendering bookmarks and detailed infornamtion on weather forecasts.
+2. **Akida Mwaruwa:** Handled task coordination, wireframe development and landing page.
+2. **David Musembi:** API handling and edge cases. Built the search bar and search logic.
+3. **Penina Wanyama:** Login & signup page functionality. Also worked on navigation bar and footer.
+4. **Max Kiama:** User interface and user experience developer.
