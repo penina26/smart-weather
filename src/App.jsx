@@ -8,13 +8,15 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import Bookmarks from './pages/Bookmarks';
 import DetailedForecast from './pages/Detailedforecast';
+import Home from './pages/Home';
+import SearchBar from './components/SearchBar';
+import { WeatherProvider } from './contexts/WeatherContext';
 
 export default function App() {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <AuthProvider>
-        <BrowserRouter>
-          <Toaster
+      <AuthProvider>       
+          <Toaster 
             position="top-center"
             toastOptions={{
               duration: 3000,
@@ -26,14 +28,16 @@ export default function App() {
           />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/login" />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/forecast/:id" element={<DetailedForecast />} />
             </Route>
           </Routes>
-        </BrowserRouter>
+          <WeatherProvider>
+            <SearchBar />
+          </WeatherProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );
