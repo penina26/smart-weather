@@ -38,3 +38,46 @@ Traditional weather platforms present technical data (temperature, humidity, rai
 4. **Max Kiama:** User interface and user experience developer.
 
 You can find an audio-visual recording <a href="https://drive.google.com/file/d/1geDKCjobopuNb9dNeUdjSprRICKecgy_/view?usp=sharing"> here </a>
+
+
+## Folder Structure
+
+```
+smart-weather-advisory/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── Alerts.jsx
+│   │   ├── Bookmarkcard.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Layout.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Recentlyviewedcard.jsx
+│   │   └── SearchBar.jsx
+│   ├── contexts/
+│   │   ├── AuthContext.jsx
+│   │   └── WeatherContext.jsx
+│   ├── hooks/
+│   │   ├── useGeocoding.js
+│   │   └── useWeather.js
+│   ├── pages/
+│   │   ├── Bookmarks.jsx
+│   │   ├── Detailedforecast.jsx
+│   │   ├── Home.jsx
+│   │   ├── LoginPage.jsx
+│   │   └── SignUpPage.jsx
+│   ├── utils/
+│   │   └── weatherCodes.js
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   ├── Layout.jsx
+│   └── main.jsx
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+└── vite.config.js
+```
