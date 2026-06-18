@@ -32,12 +32,10 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/details" element={<DetailedForecast />} />
               <Route path="/forecast/:id" element={<DetailedForecast />} />
             </Route>
           </Routes>
-          <WeatherProvider>
-            <SearchBar />
-          </WeatherProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );
