@@ -1,30 +1,63 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import SearchBar from '../components/SearchBar';
-import { WeatherProvider } from '../contexts/WeatherContext';
+import SearchBar from "../components/SearchBar";
+import { WeatherProvider } from "../contexts/WeatherContext";
+import { Link } from "react-router-dom";
+import heroImage from "../assets/hero.jpg";
 
 function Home() {
   return (
-    <main className="flex-grow flex flex-col items-center justify-center p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <main>
+      {/* HERO SECTION */}
+      <section
+        className="relative min-h-screen bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+        }}
+      >
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/65"></div>
 
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-50 dark:bg-orange-900/10 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+          <span className="px-4 py-2 rounded-full bg-blue-500/20 backdrop-blur-sm text-blue-100 border border-blue-300/20 mb-6">
+            Smart Weather Planning
+          </span>
 
-      <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-10 z-10 transition-colors duration-300">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Welcome to Atmosphere</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">Your personalized weather-smart scheduling assistant.</p>
-        </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
+            Weather That
+            <span className="block text-blue-400">
+              Helps You Decide
+            </span>
+          </h1>
 
-        <div className="space-y-5">
-          <p className="text-slate-700 dark:text-slate-300 text-center"> 
-            Log in to sync your schedule with real-time weather insights and make the most of your day, rain or shine!
+          <p className="max-w-3xl mt-6 text-lg md:text-xl text-slate-200">
+            Get real-time weather forecasts transformed into practical
+            recommendations that help you plan your day, travel,
+            outdoor activities, and events with confidence.
           </p>
+
+          {/* Search */}
+          <div className="w-full max-w-2xl mt-10">
+              <SearchBar />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <Link
+              to="/register"
+              className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition"
+            >
+              Get Started
+            </Link>
+
+            <Link
+              to="/login"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20 transition"
+            >
+              Login
+            </Link>
+          </div>
         </div>
-        <WeatherProvider>
-            <SearchBar />
-          </WeatherProvider>
-      </div>
+      </section>
     </main>
   );
 }
