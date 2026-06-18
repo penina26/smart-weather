@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useGeocoding }      from "../hooks/useGeocoding";
 import { useWeatherContext } from "../contexts/WeatherContext";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchBar() {
   const { setCity }                      = useWeatherContext();
   const [query, setQuery]                = useState("");
   const [showResults, setShowResults]    = useState(false);
   const { results, loading, searchCity } = useGeocoding();
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -15,12 +17,15 @@ export default function SearchBar() {
     setShowResults(true);
   };
 
+  const navigate = useNavigate();
+
   const handleSelect = (city) => {
     setCity(city);
     setQuery(city.name);
     setShowResults(false);
-  };
 
+    navigate("/details");
+};
   return (
     <div className="relative max-w-xl mx-auto">
 
