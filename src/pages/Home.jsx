@@ -1,7 +1,7 @@
 import SearchBar from "../components/SearchBar";
-import { WeatherProvider } from "../contexts/WeatherContext";
 import { Link } from "react-router-dom";
 import heroImage from "../assets/hero.jpg";
+import WeatherAnalyticsDashboard from "../components/WeatherAnalyticsDashboard";
 
 function Home() {
   return (
@@ -17,26 +17,24 @@ function Home() {
         <div className="absolute inset-0 bg-black/65"></div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center py-16">
           <span className="px-4 py-2 rounded-full bg-blue-500/20 backdrop-blur-sm text-blue-100 border border-blue-300/20 mb-6">
             Smart Weather Planning
           </span>
 
           <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
             Weather That
-            <span className="block text-blue-400">
-              Helps You Decide
-            </span>
+            <span className="block text-blue-400">Helps You Decide</span>
           </h1>
 
           <p className="max-w-3xl mt-6 text-lg md:text-xl text-slate-200">
             Get real-time weather forecasts transformed into practical
-            recommendations that help you plan your day, travel,
-            outdoor activities, and events with confidence.
+            recommendations that help you plan your day, travel, outdoor
+            activities, and events with confidence.
           </p>
 
           {/* Search */}
-          <div className="w-full max-w-2xl mt-10">
+          <div className="w-full max-w-3xl mt-10">
             <SearchBar />
           </div>
 
@@ -58,6 +56,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* ANALYTICS DASHBOARD */}
+      <WeatherAnalyticsDashboard />
     </main>
   );
 }
