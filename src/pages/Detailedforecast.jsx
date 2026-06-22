@@ -12,6 +12,7 @@ import {
   FiDroplet,
   FiSun,
 } from "react-icons/fi";
+import WeatherAnalyticsDashboard from "../components/WeatherAnalyticsDashboard";
 
 function DetailedForecast() {
   const navigate = useNavigate();
@@ -165,75 +166,14 @@ function DetailedForecast() {
         </div>
 
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
-          <div className="text-8xl mb-3">{weatherInfo.icon}</div>
-          <h1 className="text-5xl font-bold">{temperature}°</h1>
-          <p className="text-xl mt-2">{weatherInfo.label}</p>
-          <p className="mt-2 text-white/90">
-            {city.name}, {city.country}
-          </p>
+          <h1 className="text-5xl font-bold">
+            {/* location icon */}
+            <FiMap className="inline-block mr-2" />
+            {city.name}, {city.country}</h1>
         </div>
       </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid md:grid-cols-4 gap-5 mb-8">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <FiThermometer />
-              <span>Temperature</span>
-            </div>
-            <h3 className="text-4xl font-bold">{temperature}°</h3>
-            <p className="text-sm text-slate-500 mt-2">
-              Feels like {feelsLike}°
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <FiSun />
-              <span>Condition</span>
-            </div>
-            <div className="text-5xl">{weatherInfo.icon}</div>
-            <p className="mt-2 text-sm">{weatherInfo.label}</p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <FiWind />
-              <span>Wind Speed</span>
-            </div>
-            <h3 className="text-4xl font-bold">{wind}</h3>
-            <p className="text-sm text-slate-500 mt-2">km/h</p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <FiDroplet />
-              <span>Humidity</span>
-            </div>
-            <h3 className="text-4xl font-bold">{humidity}%</h3>
-            <p className="text-sm text-slate-500 mt-2">
-              {humidity < 40 ? "Dry" : humidity < 70 ? "Comfortable" : "Humid"}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <h3 className="font-bold text-lg mb-3">Clothing Recommendation</h3>
-            <p className="text-slate-600 dark:text-slate-400">{attire}</p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow">
-            <h3 className="font-bold text-lg mb-3">Activity Planning</h3>
-            <p className="text-slate-600 dark:text-slate-400">{activity}</p>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl p-8 text-white shadow-xl">
-          <h3 className="font-bold text-xl mb-3">Smart Weather Insight</h3>
-          <p className="text-lg">{smartTip}</p>
-        </div>
-      </div>
+       {/* ANALYTICS DASHBOARD */}
+      <WeatherAnalyticsDashboard />
     </main>
   );
 }

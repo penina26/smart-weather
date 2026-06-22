@@ -16,8 +16,9 @@ export function useWeather(lat, lon) {
         const url =
           `https://api.open-meteo.com/v1/forecast` +
           `?latitude=${lat}&longitude=${lon}` +
-          `&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,apparent_temperature` +
-          `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max` +
+          `&current_weather=true` +
+          `&hourly=temperature_2m,apparent_temperature,relativehumidity_2m,windspeed_10m,weathercode` +
+          `&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max` +
           `&timezone=Africa%2FNairobi`;
 
         const res = await fetch(url);
@@ -27,7 +28,37 @@ export function useWeather(lat, lon) {
         }
 
         const data = await res.json();
-        setWeather(data);
+
+        // Normalize response so components can read 'weather.current.*'
+        const current = {};
+
+        if (data.current_weather) {
+          current.temperature_2m = data.current_weather.temperature;
+          current.weathercode = data.current_weather.weathercode;
+          current.windspeed_10m = data.current_weather.windspeed;
+          current.time = data.current_weather.time;
+        }
+
+        // Fallback to hourly arrays for missing fields
+        if (data.hourly) {
+          const idx = 0;
+          current.temperature_2m =
+            current.temperature_2m ?? data.hourly.temperature_2m?.[idx];
+          current.apparent_temperature =
+            data.hourly.apparent_temperature?.[idx] ?? null;
+          current.relativehumidity_2m =
+            data.hourly.relativehumidity_2m?.[idx] ?? null;
+          current.windspeed_10m =
+            current.windspeed_10m ?? data.hourly.windspeed_10m?.[idx];
+          current.weathercode = current.weathercode ?? data.hourly.weathercode?.[idx];
+        }
+
+        const normalized = {
+          ...data,
+          current,
+        };
+
+        setWeather(normalized);
       } catch (err) {
         setError(err.message || "Failed to load weather");
       } finally {

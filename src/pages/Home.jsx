@@ -1,7 +1,6 @@
 import SearchBar from "../components/SearchBar";
 import { Link } from "react-router-dom";
 import heroImage from "../assets/hero.jpg";
-import WeatherAnalyticsDashboard from "../components/WeatherAnalyticsDashboard";
 
 function Home() {
   return (
@@ -56,9 +55,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-      {/* ANALYTICS DASHBOARD */}
-      <WeatherAnalyticsDashboard />
     </main>
   );
 }
