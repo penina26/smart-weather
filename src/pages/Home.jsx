@@ -37,13 +37,13 @@ function Home() {
 
           {/* Search */}
           <div className="w-full max-w-2xl mt-10">
-              <SearchBar />
+            <SearchBar />
           </div>
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Link
-              to="/register"
+              to="/signup"
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition"
             >
               Get Started
