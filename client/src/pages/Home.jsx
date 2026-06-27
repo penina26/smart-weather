@@ -7,15 +7,15 @@ function Home() {
     <main>
       {/* HERO SECTION */}
       <section
-      // className="relative min-h-screen bg-cover bg-center"
-      // style={{
-      //   backgroundImage: `url(${heroImage})`,
-      // }}
+        className="relative min-h-screen bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+        }}
       >
         {/* Dark Overlay */}
-        {/* <div className="absolute inset-0 bg-black/65"></div> */}
+        <div className="absolute inset-0 bg-black/65"></div>
 
-        {/* Content
+        {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center py-16">
           <span className="px-4 py-2 rounded-full bg-blue-500/20 backdrop-blur-sm text-blue-100 border border-blue-300/20 mb-6">
             Smart Weather Planning
@@ -30,30 +30,30 @@ function Home() {
             Get real-time weather forecasts transformed into practical
             recommendations that help you plan your day, travel, outdoor
             activities, and events with confidence.
-          </p> */}
+          </p>
 
-        {/* Search */}
-        <div className="w-full max-w-3xl mt-10">
-          <SearchBar />
-        </div>
+          {/* Search */}
+          <div className="w-full max-w-3xl mt-10">
+            <SearchBar />
+          </div>
 
-        {/* Buttons
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Link
               to="/signup"
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition"
             >
               Get Started
-            </Link> */}
+            </Link>
 
-        {/* <Link
+            <Link
               to="/login"
               className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20 transition"
             >
               Login
             </Link>
           </div>
-        </div> */}
+        </div>
       </section>
     </main>
   );
