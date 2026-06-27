@@ -7,11 +7,41 @@ const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000";
 
 export function RecentViewsProvider({ children }) {
-    const { token, isAuthenticated } = useAuth();
+    
+    const { token, isAuthenticated, refreshAccessToken, logout } = useAuth();
 
     const [recentViews, setRecentViews] = useState([]);
     const [loadingRecentViews, setLoadingRecentViews] = useState(false);
     const [recentViewsError, setRecentViewsError] = useState(null);
+
+   
+    const fetchWithAuth = async (endpoint, options = {}) => {
+        let currentToken = token;
+
+        const makeRequest = (authToken) =>
+            fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+
+        let response = await makeRequest(currentToken);
+
+        
+        if (response.status === 401 && refreshAccessToken) {
+            try {
+                currentToken = await refreshAccessToken();
+                response = await makeRequest(currentToken);
+            } catch (refreshError) {
+                if (logout) logout();
+                throw new Error("Session expired. Please log in again.");
+            }
+        }
+
+        return response;
+    };
 
     const fetchRecentViews = async () => {
         if (!token || !isAuthenticated) {
@@ -23,11 +53,9 @@ export function RecentViewsProvider({ children }) {
         setRecentViewsError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/recent-views`, {
+            
+            const response = await fetchWithAuth("/api/recent-views", {
                 method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();
@@ -50,11 +78,11 @@ export function RecentViewsProvider({ children }) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/recent-views`, {
+            
+            const response = await fetchWithAuth("/api/recent-views", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(location),
             });
@@ -65,6 +93,7 @@ export function RecentViewsProvider({ children }) {
                 throw new Error(data.error || "Failed to save recent view");
             }
 
+            
             await fetchRecentViews();
         } catch (error) {
             setRecentViewsError(error.message || "Failed to save recent view");
@@ -77,11 +106,9 @@ export function RecentViewsProvider({ children }) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/recent-views`, {
+            
+            const response = await fetchWithAuth("/api/recent-views", {
                 method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();

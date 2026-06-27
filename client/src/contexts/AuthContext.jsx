@@ -6,6 +6,8 @@ const USER_KEY = "atmosphere_user";
 const ACCESS_TOKEN_KEY = "atmosphere_access_token";
 const REFRESH_TOKEN_KEY = "atmosphere_refresh_token";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000";
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -53,6 +55,44 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   };
 
+  
+  const refreshAccessToken = async () => {
+    try {
+      if (!refreshToken) {
+        throw new Error("No refresh token available");
+      }
+
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+        method: "POST", 
+        headers: {
+          Authorization: `Bearer ${refreshToken}`, 
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to refresh token");
+      }
+
+      const data = await response.json();
+      
+      // Look for the new access token in the response
+      const newAccessToken = data.access_token || data.accessToken;
+
+      if (newAccessToken) {
+        setAccessToken(newAccessToken);
+        localStorage.setItem(ACCESS_TOKEN_KEY, newAccessToken);
+        return newAccessToken;
+      } else {
+        throw new Error("Backend did not return a new access token");
+      }
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      logout(); 
+      throw error;
+    }
+  };
+
   const value = useMemo(
     () => ({
       user,
@@ -62,6 +102,7 @@ export function AuthProvider({ children }) {
       isAuthenticated: !!user && !!accessToken,
       login,
       logout,
+      refreshAccessToken,
     }),
     [user, accessToken, refreshToken]
   );

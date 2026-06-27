@@ -7,11 +7,44 @@ const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000";
 
 export function BookmarksProvider({ children }) {
-    const { token, isAuthenticated } = useAuth();
+    // Make sure your AuthContext exports these methods!
+    const { token, isAuthenticated, refreshAccessToken, logout } = useAuth();
 
     const [bookmarks, setBookmarks] = useState([]);
     const [loadingBookmarks, setLoadingBookmarks] = useState(false);
     const [bookmarksError, setBookmarksError] = useState(null);
+
+    /**
+     * Internal helper to make API calls with automatic 401 retry logic.
+     */
+    const fetchWithAuth = async (endpoint, options = {}) => {
+        let currentToken = token;
+
+        const makeRequest = (authToken) => 
+            fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+
+        let response = await makeRequest(currentToken);
+
+        // If unauthorized, attempt to refresh the token and retry
+        if (response.status === 401 && refreshAccessToken) {
+            try {
+                currentToken = await refreshAccessToken();
+                response = await makeRequest(currentToken);
+            } catch (refreshError) {
+                // If refresh fails, session is completely dead
+                if (logout) logout();
+                throw new Error("Session expired. Please log in again.");
+            }
+        }
+
+        return response;
+    };
 
     const fetchBookmarks = async () => {
         if (!token || !isAuthenticated) {
@@ -23,11 +56,8 @@ export function BookmarksProvider({ children }) {
         setBookmarksError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/bookmarks`, {
+            const response = await fetchWithAuth("/api/bookmarks", {
                 method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();
@@ -44,6 +74,7 @@ export function BookmarksProvider({ children }) {
         }
     };
 
+    // Automatically fetch when auth state changes
     useEffect(() => {
         fetchBookmarks();
     }, [token, isAuthenticated]);
@@ -57,11 +88,10 @@ export function BookmarksProvider({ children }) {
         try {
             setBookmarksError(null);
 
-            const response = await fetch(`${API_BASE_URL}/api/bookmarks`, {
+            const response = await fetchWithAuth("/api/bookmarks", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(bookmark),
             });
@@ -69,7 +99,7 @@ export function BookmarksProvider({ children }) {
             const data = await response.json();
 
             if (response.status === 409) {
-                return;
+                return; // Already bookmarked
             }
 
             if (!response.ok) {
@@ -91,11 +121,8 @@ export function BookmarksProvider({ children }) {
         try {
             setBookmarksError(null);
 
-            const response = await fetch(`${API_BASE_URL}/api/bookmarks/${id}`, {
+            const response = await fetchWithAuth(`/api/bookmarks/${id}`, {
                 method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();
@@ -115,11 +142,8 @@ export function BookmarksProvider({ children }) {
             throw new Error("You must be logged in to view this bookmark.");
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/bookmarks/${id}`, {
+        const response = await fetchWithAuth(`/api/bookmarks/${id}`, {
             method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
         });
 
         const data = await response.json();

@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; 
 
 function Navbar() {  
-  const { user, logout } = useAuth();
+ 
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,11 +24,12 @@ function Navbar() {
         <Link to="/bookmarks" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
           Bookmarks
         </Link>
-        {/* Dynamic Authentication Rendering */}
-        {user ? (
+        
+  
+        {isAuthenticated && user ? (
           <div className="flex items-center space-x-4 ml-2 pl-6 border-l border-slate-200 dark:border-slate-700">
             <span className="text-slate-800 dark:text-slate-200">
-              Hi, {user.name.split(' ')[0]} {/* Shows the logged in user first name */}
+              Hi, {user.name.split(' ')[0]}
             </span>
             <button 
               onClick={handleLogout}
