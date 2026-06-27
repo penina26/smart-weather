@@ -6,7 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Layout from './Layout';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-// import Bookmarks from './pages/Bookmarks';
+
 import DetailedForecast from './pages/Detailedforecast';
 import Home from './pages/Home';
 import SearchBar from './components/SearchBar';
@@ -32,7 +32,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            {/* <Route path="/bookmarks" element={<Bookmarks />} /> */}
+
             <Route path="/bookmarks" element={<BookmarksPage />} />
             <Route path="/details" element={<DetailedForecast />} />
             <Route path="/forecast/:id" element={<DetailedForecast />} />

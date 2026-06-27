@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWeatherContext } from "../contexts/WeatherContext";
 import { useBookmarks } from "../contexts/BookmarksContext";
 import { getWeather } from "../utils/weatherCodes";
+import PlanningNotesModal from "../components/PlanningNotesModal";
+import { useRecentViews } from "../contexts/RecentViewsContext";
+
+
+
 import {
   FiArrowLeft,
   FiBookmark,
@@ -16,61 +21,87 @@ import WeatherAnalyticsDashboard from "../components/WeatherAnalyticsDashboard";
 
 function DetailedForecast() {
   const navigate = useNavigate();
-  const { city, weather, loading } = useWeatherContext();
-  const { addBookmark, bookmarks } = useBookmarks();
+
+  const { city, weather, loading, error } = useWeatherContext();
+  const { addBookmark, bookmarks = [] } = useBookmarks();
+  const { addRecentView } = useRecentViews();
+
+  const [showPlanningNotes, setShowPlanningNotes] = useState(false);
 
   useEffect(() => {
     if (!city || !weather?.current) return;
 
-    const weatherInfo = getWeather(weather.current.weathercode);
-
-    const viewedItem = {
-      id: `${city.name}-${city.country}`,
+    addRecentView({
       city: city.name,
       country: city.country,
-      temperature: weather.current.temperature_2m,
-      feelsLike: weather.current.apparent_temperature,
-      humidity: weather.current.relativehumidity_2m,
-      wind: weather.current.windspeed_10m,
-      condition: weatherInfo.label,
-      icon: weatherInfo.icon,
-      weatherCode: weather.current.weathercode,
-      viewedAt: new Date().toISOString(),
-    };
-
-    const existing =
-      JSON.parse(localStorage.getItem("recentlyViewed")) || [];
-
-    const updated = [
-      viewedItem,
-      ...existing.filter((item) => item.id !== viewedItem.id),
-    ].slice(0, 5);
-
-    localStorage.setItem("recentlyViewed", JSON.stringify(updated));
-  }, [city, weather]);
+      latitude: city.latitude,
+      longitude: city.longitude,
+    });
+  }, [city, weather, addRecentView]);
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold">Loading weather...</h2>
+      <main className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+          Loading weather...
+        </h2>
       </main>
     );
   }
 
-  if (!weather || !city) {
+  if (error) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold">No weather data available</h2>
+      <main className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow text-center max-w-md">
+          <h2 className="text-xl font-semibold text-red-600 mb-2">
+            Weather could not be loaded
+          </h2>
+
+          <p className="text-slate-500 dark:text-slate-400">{error}</p>
+
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl transition"
+          >
+            Back Home
+          </button>
+        </div>
       </main>
     );
   }
 
-  const weatherInfo = getWeather(weather.current.weathercode);
+  if (!city || !weather || !weather.current) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow text-center max-w-md">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+            No weather data available
+          </h2>
 
-  const temperature = weather.current.temperature_2m;
-  const feelsLike = weather.current.apparent_temperature;
-  const humidity = weather.current.relativehumidity_2m;
-  const wind = weather.current.windspeed_10m;
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
+            Please search for a city first.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl transition"
+          >
+            Back Home
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  const current = weather.current;
+  const weatherInfo = getWeather(current.weather_code);
+
+  const temperature = current.temperature_2m;
+  const feelsLike = current.apparent_temperature;
+  const humidity = current.relative_humidity_2m;
+  const wind = current.wind_speed_10m;
 
   const isBookmarked = bookmarks.some(
     (item) => item.city === city.name && item.country === city.country
@@ -78,16 +109,17 @@ function DetailedForecast() {
 
   const handleBookmark = () => {
     const bookmarkData = {
-      id: `${city.name}-${city.country}`,
       city: city.name,
       country: city.country,
+      latitude: city.latitude,
+      longitude: city.longitude,
       temperature,
       feelsLike,
       humidity,
       wind,
       condition: weatherInfo.label,
       icon: weatherInfo.icon,
-      weatherCode: weather.current.weathercode,
+      weatherCode: current.weather_code,
       savedAt: new Date().toISOString(),
     };
 
@@ -100,8 +132,7 @@ function DetailedForecast() {
 
   if (temperature >= 30) {
     attire = "Wear light clothing, sunglasses and stay hydrated.";
-    activity =
-      "Avoid strenuous outdoor activities during peak afternoon hours.";
+    activity = "Avoid strenuous outdoor activities during peak afternoon hours.";
     smartTip = "Carry a water bottle and seek shade whenever possible.";
   } else if (temperature <= 15) {
     attire =
@@ -135,6 +166,7 @@ function DetailedForecast() {
 
         <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center">
           <button
+            type="button"
             onClick={() => navigate("/")}
             className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-xl hover:bg-white/30 transition"
           >
@@ -144,11 +176,12 @@ function DetailedForecast() {
 
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={handleBookmark}
               disabled={isBookmarked}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md transition ${isBookmarked
-                  ? "bg-yellow-400 text-slate-900 cursor-not-allowed"
-                  : "bg-white/20 text-white hover:bg-white/30"
+                ? "bg-yellow-400 text-slate-900 cursor-not-allowed"
+                : "bg-white/20 text-white hover:bg-white/30"
                 }`}
             >
               <FiBookmark />
@@ -156,6 +189,7 @@ function DetailedForecast() {
             </button>
 
             <button
+              type="button"
               onClick={() => navigate("/bookmarks")}
               className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-xl hover:bg-white/30 transition"
             >
@@ -171,8 +205,22 @@ function DetailedForecast() {
             <FiMap className="inline-block mr-2" />
             {city.name}, {city.country}</h1>
         </div>
+        <div className="mt-6">
+          <button
+            type="button"
+            onClick={() => setShowPlanningNotes(true)}
+            className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 px-6 py-3 rounded-xl font-semibold transition"
+          >
+            Planning Notes
+          </button>
+        </div>
+
+        {showPlanningNotes && (
+          <PlanningNotesModal onClose={() => setShowPlanningNotes(false)} />
+        )}
+
       </div>
-       {/* ANALYTICS DASHBOARD */}
+      {/* ANALYTICS DASHBOARD */}
       <WeatherAnalyticsDashboard />
     </main>
   );

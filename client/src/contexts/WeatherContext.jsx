@@ -11,14 +11,17 @@ export function WeatherProvider({ children }) {
     country: "Kenya",
   });
 
-  const { weather, loading, error } = useWeather(
+  const { weather, backendCity, loading, error } = useWeather(
     city.latitude,
-    city.longitude
+    city.longitude,
+    city.name,
+    city.country
   );
 
   const value = {
     city,
     setCity,
+    backendCity,
     weather,
     loading,
     error,
