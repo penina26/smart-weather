@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
     FiEdit2,
     FiPlus,
@@ -32,6 +33,7 @@ function ForecastPlanningNotes() {
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
     const [editForecastDate, setEditForecastDate] = useState("");
+    const [selectedNote, setSelectedNote] = useState(null);
 
     const [formError, setFormError] = useState("");
 
@@ -263,7 +265,9 @@ function ForecastPlanningNotes() {
                                 <>
                                     <div className="flex justify-between gap-4">
                                         <div>
-                                            <h4 className="font-bold text-slate-900 dark:text-white">
+                                            <h4 
+                                                onClick={() => setSelectedNote(note)}
+                                                className="font-bold text-slate-900 dark:text-white">
                                                 {note.title}
                                             </h4>
 
@@ -296,10 +300,49 @@ function ForecastPlanningNotes() {
                                     <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
                                         {note.content}
                                     </p>
+                                    
                                 </>
                             )}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Modal Overlay */}
+            {selectedNote && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                    {/* Modal Container */}
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 w-full max-w-lg shadow-xl border border-slate-200 dark:border-slate-700 relative">
+                        
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-6 pr-8">
+                            <div>
+                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                    {selectedNote.title}
+                                </h3>
+                                {selectedNote.forecast_date && (
+                                    <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mt-2">
+                                        Forecast date: {selectedNote.forecast_date}
+                                    </p>
+                                )}
+                            </div>
+                            
+                            {/* Close Button */}
+                            <button 
+                                onClick={() => setSelectedNote(null)}
+                                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+                            >
+                                <FiX size={20} />
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                            <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+                                {selectedNote.content}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </section>
