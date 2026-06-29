@@ -19,7 +19,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(app)
+    CORS(app,
+         origins=[
+        "https://E2DKZW68WRFOV.cloudfront.net",
+        "http://localhost:5173"  # for local development
+    ])
 
     db.init_app(app)
     jwt.init_app(app)
