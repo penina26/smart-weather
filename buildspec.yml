@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Extracting the Python backend for Elastic Beanstalk..."
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: server
